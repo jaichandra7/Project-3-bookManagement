@@ -4,7 +4,7 @@ const { isValidId } = require("../Validator/bookValidation");
 const userModel = require("../Models/userModel")
 
 // Authentication
-const authorAuthentication = async function (req, res, next) {
+const authentication = async function (req, res, next) {
   try {
     let token = req.headers["x-api-key"] || req.headers["X-API-KEY"];
     // checking token
@@ -32,33 +32,38 @@ const authorAuthentication = async function (req, res, next) {
 //Authorization
 const authorization = async function (req, res, next) {
   try {
-    let userId = req.body.userId
+    let bookId = req.params.bookId
     let userLoggedIn = req.token.userId;
-    if(!userId) return res.status(400).send({status:false, message:"userId is required"})
 
-    if (!isValidId(userId))
+        if(!bookId){
+            return  res
+            .status(400)
+            .send({status:false, message:"give bookId in params"})
+        }
+    
+    if (!isValidId(bookId))
       return res
         .status(400)
-        .send({ status: false, message: "Please enter valid userId" });
-    // Blog validation
-    let user = await userModel.findOne({
-      _id: userId,
+        .send({ status: false, message: "Please enter valid bookId" });
+    
+    let book = await bookModel.findOne({
+      _id: bookId, isDeleted:false
     });
 
-    if (!user) {
+    if (!book) {
       return res
         .status(404)
-        .send({ status: false, message: "No such user exists" });
+        .send({ status: false, message: "No book found" });
     }
     // token validation
-    if (userLoggedIn != user._id)
+    if (userLoggedIn != book.userId)
       return res.status(401).send({
         status: false,
         message: "You are not authorized to perform this task",
       });
 
     // creating an attribute in "req" to access the blog data outside the middleware
-    req.user = user;
+    req.book = book;
     next();
   } catch (error) {
     return res.status(500).send({ status: false, message: error.message });
@@ -66,6 +71,6 @@ const authorization = async function (req, res, next) {
 };
 
 module.exports = {
-  authorAuthentication,
-  authorization,
+  authentication,
+  authorization
 };

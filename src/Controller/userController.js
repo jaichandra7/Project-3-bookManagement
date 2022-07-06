@@ -11,14 +11,16 @@ const {isValidRequest,
 
 const createUser = async function(req,res){
     try{
-         let {title, name, phone, email, password, address} = req.body;
-         let user = {}
-         
+        
          if(!isValidRequest(req.body)){
             return res
                     .status(400)
                     .send({status: false, message:"Enter a Valid Input"})
          }
+
+         let {title, name, phone, email, password, address} = req.body;
+         let user = {}
+         
          if(title){
             title = title.trim()
             if(!isValidTitle(title)){
@@ -75,7 +77,7 @@ const createUser = async function(req,res){
        const isDuplicate = await userModel.findOne({$or:[{phone:phone},{email:email}]})
        if(isDuplicate){
         return res
-                .status(400)                  
+                .status(409)                  
                 .send({status:false, message:"email or phone already in use"})
        }
        user.phone = phone
@@ -135,53 +137,55 @@ const createUser = async function(req,res){
 
 const login = async function (req, res) {
     try {
-        let { email, password } = req.body
-
-        if (!isValidRequest(req.body)) {
-            return res
-                .status(400)
-                .send({ status: false, message: "Enter a Valid Input" })
-        }
-
-        if (!email) {
-            return res.status(400).send({ status: false, msg: "Please provide email." })
-        }
-
-        if (!password) {
-            return res.status(400).send({ status: false, msg: "Enter password" })
-        }
-
-        let user = await userModel.findOne({ email: email })
-        if (user) {
-            if (user.password !== password) {
-                return res
-                    .status(400)
-                    .send({ status: false, message: "Password is incorrect" })
-            }
-        } else {
-            return res
-                .status(404)
-                .send({ status: false, message: "user with this email is not found" })
-        }
-        //token creation
-        let token = await jwt.sign({
-            userId: user._id,
-            expiresIn: "24h"}, //payload
-            "book-management36" 
-        )
-        res.setHeader("x-api-key", token)
-        res.status(201).send({ status: true, message: 'Success', data: token })
-
-
-    }
-    catch (error) {
-        console.log(error)
+  
+      if (!isValidRequest(req.body)) {
         return res
-            .status(500)
-            .send({ status: false, message: error.message })
+          .status(400)
+          .send({ status: false, message: "Please provide login details" });
+      }
+      let email = req.body.email;
+      let password = req.body.password;
+  
+      // validating the userName(email)
+      if (!isValidMail(email))
+        return res
+          .status(400)
+          .send({ status: false, message: "Entered mail ID is not valid" });
+  
+      // validating the password
+      if (!isValidPassword(password))
+        return res.status(400).send({
+          status: false,
+          message: "Passwrod is not valid",
+        });
+  
+      // finding for the author with email and password
+      let user = await userModel.findOne({
+        email: email,
+        password: password,
+      });
+      if (!user)
+        return res.status(400).send({
+          status: false,
+          message: "Username and password are not matched",
+        });
+  
+      // JWT creation
+      let token = jwt.sign(
+        {
+          userId: user._id.toString(),
+          expiresIn: "24h"
+        },
+        "book-management36"
+      );
+      res.header("x-api-key", token);
+      return res
+        .status(200)
+        .send({ status: true, message: "Success", data: token });
+    } catch (err) {
+      return res.status(500).send({status: false, message: err.message});
     }
-
-}
+  };
  
 
 module.exports = {createUser, login}
