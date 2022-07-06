@@ -15,7 +15,6 @@ const authorAuthentication = async function (req, res, next) {
 
     // validating the token
     let decoded = jwt.verify(token, "book-management36") 
-    console.log(decoded)
       if (!decoded){
         return res.status(401).send({ status: false, message: "token is invalid" });
       }

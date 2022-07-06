@@ -103,6 +103,8 @@ const createBook = async function(req, res){
 
         let today = moment()
         book.releasedAt = today.format("YYYY-MM-DD")
+       
+        
 
         const newBook = await bookModel.create(book)
         return  res
