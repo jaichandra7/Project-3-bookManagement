@@ -27,6 +27,16 @@ const userSchema = new mongoose.Schema({
             maxLength: 15
     },
     address: {
-                
+                street:{
+                    type: String
+                },
+                city: {
+                    type: String
+                },
+                pincode:{
+                    type: String
+                }
     }
-})
+},{timestamps:true})
+
+module.exports = mongoose.model("User", userSchema)

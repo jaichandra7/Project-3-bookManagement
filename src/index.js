@@ -2,7 +2,7 @@ const express = require("express");
 var bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const route = require("./routes/route.js");
+const route = require("./route/route.js");
 const app = express();
 
 app.use(bodyParser.json()); // tells the system that you want json to be used
