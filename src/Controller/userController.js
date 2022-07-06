@@ -120,10 +120,10 @@ const createUser = async function(req,res){
             }
          }
 
-         const createUser = await userModel.create(user)
+         const newUser = await userModel.create(user)
          return res
                     .status(201)
-                    .send({status:true, message:"Success", data: createUser })
+                    .send({status:true, message:"Success", data: newUser })
 
     }
     catch(error){
@@ -133,9 +133,56 @@ const createUser = async function(req,res){
     }
 }
 
+const login = async function (req, res) {
+    try {
+        let { email, password } = req.body
 
-const login = function(req,res){
-    
+        if (!isValidRequest(req.body)) {
+            return res
+                .status(400)
+                .send({ status: false, message: "Enter a Valid Input" })
+        }
+
+        if (!email) {
+            return res.status(400).send({ status: false, msg: "Please provide email." })
+        }
+
+        if (!password) {
+            return res.status(400).send({ status: false, msg: "Enter password" })
+        }
+
+        let user = await userModel.findOne({ email: email })
+        if (user) {
+            if (user.password !== password) {
+                return res
+                    .status(400)
+                    .send({ status: false, message: "Password is incorrect" })
+            }
+        } else {
+            return res
+                .status(404)
+                .send({ status: false, message: "user with this email is not found" })
+        }
+        //token creation
+        let token = await jwt.sign({
+            userId: user._id,
+            expiresIn: "24h"}, //payload
+            "book-management36",   
+        )
+        res.setHeader("x-api-key", token)
+        res.status(201).send({ status: true, message: 'Success', data: token })
+
+
+    }
+    catch (error) {
+        console.log(error)
+        return res
+            .status(500)
+            .send({ status: false, message: error.message })
+    }
+
 }
+ 
 
-module.exports = {createUser}
+module.exports = {createUser, login}
+
