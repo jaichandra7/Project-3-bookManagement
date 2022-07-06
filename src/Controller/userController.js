@@ -167,7 +167,7 @@ const login = async function (req, res) {
         let token = await jwt.sign({
             userId: user._id,
             expiresIn: "24h"}, //payload
-            "book-management36",   
+            "book-management36" 
         )
         res.setHeader("x-api-key", token)
         res.status(201).send({ status: true, message: 'Success', data: token })

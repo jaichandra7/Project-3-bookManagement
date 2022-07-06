@@ -1,6 +1,7 @@
-const bookModel = require('../Models/bookModel')
+const bookModel = require("../Models/bookModel");
 const {isValidRequest, isValidName, isValid} = require('../Validator/userValidation')
-const {convertToArray} = require('../Validator/bookValidation')
+const {convertToArray, isValidISBN} = require('../Validator/bookValidation')
+const moment = require('moment')
 
 
 const createBook = async function(req, res){
@@ -40,19 +41,38 @@ const createBook = async function(req, res){
             book.userId = req.user._id
         }
 
-        if(ISBN == undefined ){
-            ISBN = Math.floor(Math.random() * 10000000000000) + 1  
+        // if(ISBN == undefined ){
+        //     ISBN = Math.floor(Math.random() * 10000000000000) + 1  
+        // }
+        // const isDuplicate = await bookModel.findOne({$or:[{title:title},{ISBN:ISBN}]})
+        // if(isDuplicate){
+        //     return res
+        //     .status(400)
+        //     .send({status:false, message:"title is already in use"})
+        // }else if(isDuplicate.ISBN == ISBN){
+        //     book.title = title
+        //     ISBN = Math.floor(Math.random() * 10000000000087) + 1
+        //     book.ISBN = ISBN
+        // }
+        if(ISBN){
+                if(!isValidISBN(ISBN)){
+                    return res
+                    .status(400)
+                    .send({status:false, message:"enter a valid ISBN of 10 or 13 characters"})
+                }
+        }else{
+            return res
+            .status(400)
+            .send({status:false, message:"ISBN is required"})
         }
         const isDuplicate = await bookModel.findOne({$or:[{title:title},{ISBN:ISBN}]})
         if(isDuplicate){
             return res
             .status(400)
-            .send({status:false, message:"title is already in use"})
-        }else if(isDuplicate.ISBN == ISBN){
-            book.title = title
-            ISBN = Math.floor(Math.random() * 10000000000087) + 1
-            book.ISBN = ISBN
+            .send({status:false, message:"title or ISBN is already in use"})
         }
+        book.title = title
+        book.ISBN = ISBN
 
         if(category){
             if(!isValid(category)){
@@ -73,7 +93,7 @@ const createBook = async function(req, res){
                 .status(400)
                 .send({status:false, message:"Enter a valid subcategory"})
             }else{
-                book.subcategory = subcategoryNew.trim()
+                book.subcategory = subcategoryNew
             }
         }else{
             return res
@@ -81,13 +101,13 @@ const createBook = async function(req, res){
             .send({status:false, message:"subcategory is required"})
         }
 
-        let date = new Date()
-        book.releasedAt = date.getFullYear()+ '-' +( date.getMonth+1) + '-' + date.getDay()
+        let today = moment()
+        book.releasedAt = today.format("YYYY-MM-DD")
 
         const newBook = await bookModel.create(book)
         return  res
                 .status(201)
-                .send({status:false, message:"Success", data: newBook})
+                .send({status:true, message:"Success", data: newBook})
     }
     catch(error){
         console.log(error)

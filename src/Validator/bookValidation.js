@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const isValidId = function(id){
    if(!mongoose.Types.ObjectId.isValid(id)){
     return false
@@ -25,4 +27,9 @@ const checkValue = function (value) {
     return false;
   };
 
-  module.exports = {convertToArray, checkValue, isValidId}
+  const isValidISBN = function(isbn){
+    return /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(isbn)
+  }
+ 
+
+  module.exports = {convertToArray, checkValue, isValidId, isValidISBN}

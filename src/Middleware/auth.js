@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const bookModel = require("../models/bookModel");
+const bookModel = require("../Models/bookModel");
 const { isValidId } = require("../Validator/bookValidation");
+const userModel = require("../Models/userModel")
 
 // Authentication
 const authorAuthentication = async function (req, res, next) {
@@ -14,15 +14,17 @@ const authorAuthentication = async function (req, res, next) {
         .send({ status: false, message: "token must be present" });
 
     // validating the token
-    jwt.verify(token, "book-management36", function (err, decoded) {
-      if (err)
+    let decoded = jwt.verify(token, "book-management36") 
+    console.log(decoded)
+      if (!decoded){
         return res.status(401).send({ status: false, message: "token is invalid" });
+      }
       else {
         // creating an attribute in "req" to access the token outside the middleware
         req.token = decoded;
         next();
       }
-    });
+
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message });
   }
@@ -59,8 +61,8 @@ const authorization = async function (req, res, next) {
     // creating an attribute in "req" to access the blog data outside the middleware
     req.user = user;
     next();
-  } catch (err) {
-    return res.status(401).send({ status: false, message: "token is invalid" });
+  } catch (error) {
+    return res.status(500).send({ status: false, message: error.message });
   }
 };
 
