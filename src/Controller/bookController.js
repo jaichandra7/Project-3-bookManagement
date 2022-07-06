@@ -1,6 +1,7 @@
-const {isValidRequest, isValidName, isValid} = require('../Validator/userValidation')
-const {} = require('../Validator/bookValidation')
 const bookModel = require('../Models/bookModel')
+const {isValidRequest, isValidName, isValid} = require('../Validator/userValidation')
+const {convertToArray} = require('../Validator/bookValidation')
+
 
 const createBook = async function(req, res){
     try{
@@ -9,7 +10,7 @@ const createBook = async function(req, res){
             .status(400)
             .send({status:false, message: "Enter a valid Input"})
         }
-        let {title, excerpt, userId, ISBN, category,subcategory, releasedAt} = req.body
+        let {title, excerpt, userId, ISBN, category,subcategory} = req.body
         let book ={}
 
         if(title){
@@ -80,7 +81,7 @@ const createBook = async function(req, res){
             .send({status:false, message:"subcategory is required"})
         }
 
-        let date = Date.now()
+        let date = new Date()
         book.releasedAt = date.getFullYear()+ '-' +( date.getMonth+1) + '-' + date.getDay()
 
         const newBook = await bookModel.create(book)
@@ -89,6 +90,7 @@ const createBook = async function(req, res){
                 .send({status:false, message:"Success", data: newBook})
     }
     catch(error){
+        console.log(error)
         return res
                 .status(500)
                 .send({status:false, message: error.message})

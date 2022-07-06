@@ -25,4 +25,4 @@ const checkValue = function (value) {
     return false;
   };
 
-  
+  module.exports = {convertToArray, checkValue, isValidId}
