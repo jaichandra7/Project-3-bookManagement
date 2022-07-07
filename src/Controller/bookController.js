@@ -232,6 +232,7 @@ const getBooksParticular = async function(req, res){
     }
 }                          
 
+//updation of book
 const updatebook = async function(req, res){
     try{
         if(!isValidRequest(req.body)){
@@ -295,10 +296,31 @@ const updatebook = async function(req, res){
             .send({status:true, message:"Success", data:book})
     }
     catch(error){
-        console.log(error)
         return res
                 .status(500)
                 .send({status:false, message: error.message})
     }
 }
-    module.exports = {createBook, getBooks, getBooksParticular, updatebook}
+
+//deletion of book
+const deleteBook = async function(req, res){
+    try{
+        let book = await bookModel.findOneAndUpdate({_id: req.book._id},{$set:{isDeleted:true, deletedAt:Date.now() }})
+
+        if(!book){
+            return res
+            .status(404)
+            .send({status:false, message: "No book found"})
+        }
+
+        return res
+        .status(200)
+        .send({status:false, message: "Successful"})
+    }
+    catch(error){
+        return res
+        .status(500)
+        .send({status:false, message: error.message})
+    }
+}
+    module.exports = {createBook, getBooks, getBooksParticular, updatebook, deleteBook}
