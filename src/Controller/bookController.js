@@ -122,12 +122,9 @@ const createBook = async function(req, res){
             .status(400)
             .send({status:false, message:"subcategory is required"})
         }
-
-        let today = moment()
-        book.releasedAt = today.format("YYYY-MM-DD")
-       
         
-
+        book.releasedAt = Date.now()
+       
         const newBook = await bookModel.create(book)
         return  res
                 .status(201)
@@ -186,6 +183,8 @@ const getBooks = async function(req,res){
                 .status(404)
                 .send({status:false, message:"No book found"})
         }
+        
+
         return  res
                 .status(200)
                 .send({status:true, message:'Books list', data: bookDetails})
@@ -235,11 +234,11 @@ const getBooksParticular = async function(req, res){
 //updation of book
 const updatebook = async function(req, res){
     try{
-        if(!isValidRequest(req.body)){
-            return  res
-            .status(400)
-            .send({status:false, message:"Enter a valid input"})
-        }
+        // if(!isValidRequest(req.body)){
+        //     return  res
+        //     .status(400)
+        //     .send({status:false, message:"Enter a valid input"})
+        // }
         let {title, excerpt, releasedAt, ISBN} = req.body
         
 
@@ -262,12 +261,13 @@ const updatebook = async function(req, res){
 
         if(releasedAt != undefined){
             let date =moment().format("YYYY-MM-DD")
-            if(!releasedAt == date){
+           
+            if(releasedAt !== date){
                 return  res
                     .status(400)
                     .send({status:false, message:"Enter the valid date format for releasedAt as YYYY-MM-DD"})
-            }
-        }else releasedAt = moment().format("YYYY-MM-DD")
+            }else releasedAt = Date.now()
+        }
         
         if(ISBN != undefined){
             ISBN = ISBN.trim()
