@@ -49,7 +49,7 @@ const createBook = async function(req, res){
             .status(400)
             .send({status:false, message:"Enter the valid format of userId"})
         }
-        const user = await userModel.findById({userId})
+        const user = await userModel.findById({_id: userId})
         if(!user){
             return  res
             .status(404)
@@ -181,7 +181,7 @@ const getBooks = async function(req,res){
           
           bookData.isDeleted = false
         let bookDetails = await bookModel.find(bookData).select({_id:1, title:1, excerpt:1, userId:1, category:1, releasedAt:1, reviews:1})
-        if(!bookDetails){
+        if(bookDetails.length == 0){
             return  res
                 .status(404)
                 .send({status:false, message:"No book found"})
@@ -261,7 +261,8 @@ const updatebook = async function(req, res){
         }
 
         if(releasedAt != undefined){
-            if(!releasedAt == moment().format("YYYY-MM-DD")){
+            let date =moment().format("YYYY-MM-DD")
+            if(!releasedAt == date){
                 return  res
                     .status(400)
                     .send({status:false, message:"Enter the valid date format for releasedAt as YYYY-MM-DD"})
@@ -310,7 +311,7 @@ const deleteBook = async function(req, res){
         if(!book){
             return res
             .status(404)
-            .send({status:false, message: "No book found"})
+            .send({status:false, message: "No book exist or is already deleted"})
         }
 
         return res
