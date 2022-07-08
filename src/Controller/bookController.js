@@ -1,6 +1,6 @@
 const bookModel = require("../Models/bookModel");
-const {isValidRequest, isValidName, isValid} = require('../Validator/userValidation')
-const {isValidId, convertToArray, isValidISBN} = require('../Validator/bookValidation')
+const {isValidRequest, isValid} = require('../Validator/userValidation')
+const {isValidId, convertToArray, isValidISBN, isValidBookTitle} = require('../Validator/bookValidation')
 const moment = require('moment');
 const userModel = require("../Models/userModel");
 const { default: mongoose } = require("mongoose");
@@ -18,7 +18,7 @@ const createBook = async function(req, res){
 
         if(title){
             title = title.trim()
-            if(!isValidName(title)){
+            if(!isValidBookTitle(title)){
                 return res
                         .status(400)
                         .send({status:false, message:"Enter valid title"})
@@ -169,7 +169,7 @@ const getBooks = async function(req,res){
             return  res
                 .status(404)
                 .send({status:false, message:"No book found"})
-        }
+        }else if(book.reviews == 0)
         
 
         return  res
@@ -231,7 +231,7 @@ const updatebook = async function(req, res){
 
         if(title != undefined){
             title = title.trim()
-            if(!isValidName(title)){
+            if(!isValidBookTitle(title)){
                 return  res
             .status(400)
             .send({status:false, message:"Enter a valid title"})

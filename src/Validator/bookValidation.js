@@ -30,6 +30,9 @@ const checkValue = function (value) {
   const isValidISBN = function(isbn){
     return /^(?=(?:\d\-*){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(isbn)
   }
- 
+  
+  const isValidBookTitle = function(name){
+    return /^[a-zA-Z0-9 ]{2,70}$/.test(name)
+}
 
-  module.exports = {convertToArray, checkValue, isValidId, isValidISBN}
+  module.exports = {convertToArray, checkValue, isValidId, isValidISBN, isValidBookTitle}

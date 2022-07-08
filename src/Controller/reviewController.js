@@ -76,8 +76,8 @@ const createReview = async function(req, res){
 
         data.reviewedt = Date.now()
         const bookReview = await reviewModel.create(data)
-        const finalBook = await bookModel.findById({_id: Id})
-
+        const finalBook = await bookModel.updateOne({_id:bookId},{$inc:{reviews: 1}})
+        
 
         return res
             .status(201)
