@@ -5,15 +5,18 @@ const {createBook,
         updatebook,
         deleteBook} = require('../Controller/bookController')
 const {authentication, authorization} = require('../Middleware/auth')
+const {createReview} = require('../Controller/reviewController')
 const express = require('express')
 const router = express.Router()
 
 router.post('/register', createUser)
 router.post('/login', login)
 
-router.post('/books',authentication, createBook)
+router.post('/books',authentication,authorization, createBook)
 router.get('/books', authentication, getBooks )
 router.get('/books/:bookId', authentication, getBooksParticular)
 router.put('/books/:bookId', authentication, authorization, updatebook)
 router.delete('/books/:bookId', authentication, authorization, deleteBook)
+
+router.post('/books/:bookId/review', createReview)
 module.exports = router

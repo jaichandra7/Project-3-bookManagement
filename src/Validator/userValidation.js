@@ -38,7 +38,7 @@ const isValidPincode = function(pin){
 
 //function for verifying the name using regex
 const isValidName = function(name){
-    return /^[a-zA-Z ]{2,70}$/.test(name)
+    return /^[a-zA-Z0-9 ]{2,70}$/.test(name)
 }
 
 module.exports = {isValidRequest,

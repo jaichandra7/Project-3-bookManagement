@@ -28,7 +28,7 @@ const checkValue = function (value) {
   };
 
   const isValidISBN = function(isbn){
-    return /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(isbn)
+    return /^(?=(?:\d\-*){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(isbn)
   }
  
 

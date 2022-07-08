@@ -49,8 +49,9 @@ const createUser = async function(req,res){
             .send({status:false, message:"Name is required"})
         }
 
-        if(phone){
+        if(phone && typeof phone == String){
             phone = phone.trim()
+            
             if(!isValidPhone(phone)){
                 return res
                     .status(400)
@@ -59,7 +60,7 @@ const createUser = async function(req,res){
         }else{
             return res
                     .status(400)
-                    .send({status:false, message:"Phone number is required"})
+                    .send({status:false, message:"Phone number is required or enter the number in string"})
         }
 
         if(email){
