@@ -1,5 +1,5 @@
 const isValidRating = function(rating){
-    return  /^[1-5]\d{0}$/.test(rating);
+    return  /^[1-5]+\.+[5]$/.test(rating); 
   };
 
 module.exports = {isValidRating}

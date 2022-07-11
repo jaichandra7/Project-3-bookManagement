@@ -64,15 +64,14 @@ const createReview = async function(req, res){
             if(!isValid(review)){
                 return res
                     .status(400)
-                    .send({status:false, message:"Enter a valid REVIEW"})
+                    .send({status:false, message:"Enter a valid Review"})
             }else data.review = review.trim()
         }
 
-        // data.reviewedt = Date.now()
         const bookReview = await reviewModel.create(data)
         const finalBook = await bookModel.findOneAndUpdate({_id:Id},{$inc:{reviews: 1}},{new:true}).select({__v:0})
         
-        finalBook._doc["reviewsData"] = [bookReview] 
+        finalBook._doc["reviewsData"] = bookReview
 
         return res
             .status(201)

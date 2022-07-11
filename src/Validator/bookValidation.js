@@ -32,7 +32,7 @@ const checkValue = function (value) {
   }
   
   const isValidBookTitle = function(name){
-    return /^[a-zA-Z0-9 ]{2,70}$/.test(name)
+    return /^[a-zA-Z0-9 ,]{2,70}$/.test(name)
 }
 
   module.exports = {convertToArray, checkValue, isValidId, isValidISBN, isValidBookTitle}
