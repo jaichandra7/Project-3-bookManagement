@@ -30,9 +30,11 @@ const reviewSchema = new mongoose.Schema({
     review:{
         type:String
     },
-    
+
     isDeleted:{
                 type:Boolean,
                 default: false
     }
 },{timestamps: true})
+
+module.exports = mongoose.model('reviews', reviewSchema)

@@ -1,6 +1,7 @@
 const bookModel = require("../Models/bookModel");
-const {isValidRequest, isValid} = require('../Validator/userValidation')
-const {isValidId, convertToArray, isValidISBN, isValidBookTitle} = require('../Validator/bookValidation')
+const reviewModel = require('../Models/reviewModel');
+const {isValidRequest, isValid} = require('../Validator/userValidation');
+const {isValidId, convertToArray, isValidISBN, isValidBookTitle} = require('../Validator/bookValidation');
 const moment = require('moment');
 const userModel = require("../Models/userModel");
 const { default: mongoose } = require("mongoose");
@@ -62,7 +63,7 @@ const createBook = async function(req, res){
          }
          book.userId = userId  
 
-        if(ISBN && typeof ISBN == String){
+        if(ISBN ){
             ISBN = ISBN.trim()
                 if(!isValidISBN(ISBN) ){
                     return res
@@ -169,9 +170,8 @@ const getBooks = async function(req,res){
             return  res
                 .status(404)
                 .send({status:false, message:"No book found"})
-        }else if(book.reviews == 0)
+        }
         
-
         return  res
                 .status(200)
                 .send({status:true, message:'Books list', data: bookDetails})
@@ -187,12 +187,6 @@ const getBooks = async function(req,res){
 const getBooksParticular = async function(req, res){
     try{
         let bookId = req.params.bookId
-    
-        if(!bookId){
-            return  res
-                .status(400)
-                .send({status:false, message:"give userId in params"})
-        }
         
         if(!isValidId(bookId)){
             return  res
@@ -200,15 +194,19 @@ const getBooksParticular = async function(req, res){
                 .send({status:false, message:"Enter valid format of bookId"})
         }
 
-        const book = await bookModel.findOne({_id: bookId})
+        const book = await bookModel.findOne({_id: bookId}).select({__v:0})
         if(!book){
             return  res
                 .status(404)
                 .send({status:false, message:"No such book found"})
         }
+
+        const review = await reviewModel.find({bookId: bookId}).select({_id:1, bookId:1, reviewedBy:1, reviewedAt:1, rating:1, review:1, })
+
+        book._doc["reviewsData"] = review
         return  res
                 .status(200)
-                .send({status:true, message:"Success", data: book})
+                .send({status:true, message:'Books list', data: book})
     }
     catch(error){
     console.log(error)
@@ -303,7 +301,7 @@ const deleteBook = async function(req, res){
 
         return res
         .status(200)
-        .send({status:false, message: "Successful"})
+        .send({status:true, message: "Success"})
     }
     catch(error){
         return res

@@ -32,14 +32,8 @@ const authentication = async function (req, res, next) {
 //Authorization
 const authorization = async function (req, res, next) {
   try {
-    let bookId = req.params.bookId
+    let bookId = req.params.bookId;
     let userLoggedIn = req.token.userId;
-
-        if(!bookId){
-            return  res
-            .status(400)
-            .send({status:false, message:"give bookId in params"})
-        }
     
     if (!isValidId(bookId))
       return res

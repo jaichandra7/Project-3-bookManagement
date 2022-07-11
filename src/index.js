@@ -7,7 +7,7 @@ const app = express();
 
 // app.use(bodyParser.json()); // tells the system that you want json to be used
 app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: true })); // It is a inbuilt method in express to recognize the incoming Request Object as strings or arrays
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 // mongoDb connection
 mongoose
