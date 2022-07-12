@@ -51,12 +51,78 @@ const createUser = async function(req,res){
 
         if(phone && typeof phone === "string"){
             phone = phone.trim()
-            
             if(!isValidPhone(phone)){
                 return res
                     .status(400)
                     .send({status:false, message:"Enter a valid phone Number"})
             }
+
+            let userPhone = await userModel.find()
+            if(phone.startsWith("+91",0)== true){
+                phone = phone.substring(4,14)
+                for(i=0; i<userPhone.length; i++){
+                    if(userPhone[i].phone.startsWith("+91")){
+                        if(userPhone[i].phone.startsWith(phone, 4)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(0)){
+                        if(userPhone[i].phone.startsWith(phone, 1)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(phone, 0)== true){
+                        return res.status(400).send({message:"phone number is already in use"})
+                    }
+                }
+                user.phone = phone
+            }
+        
+            if(phone.startsWith("0",0)== true){
+                phone = phone.substring(1,12)
+                for(i=0; i<userPhone.length; i++){
+                    if(userPhone[i].phone.startsWith("+91")){
+                        if(userPhone[i].phone.startsWith(phone, 4)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(0)){
+                        if(userPhone[i].phone.startsWith(phone, 1)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(phone, 0)== true){
+                        return res.status(400).send({message:"phone number is already in use"})
+                    }
+                }
+                user.phone = phone
+            }
+        
+            if(phone){
+                for(i=0; i<userPhone.length; i++){
+                    if(userPhone[i].phone.startsWith("+91")){
+                        if(userPhone[i].phone.startsWith(phone, 4)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(0)){
+                        if(userPhone[i].phone.startsWith(phone, 1)== true){
+                            return res.status(400).send({message:"phone number is already in use"})
+                        }
+                    }
+        
+                    if(userPhone[i].phone.startsWith(phone, 0)== true){
+                        return res.status(400).send({message:"phone number is already in use"})
+                    }
+                }
+                user.phone = phone
+            }
+            
         }else{
             return res
                     .status(400)
@@ -75,13 +141,13 @@ const createUser = async function(req,res){
             .send({status:false, message:"Email is required"})
        }
 
-       const isDuplicate = await userModel.findOne({$or:[{phone:phone},{email:email}]})
+       const isDuplicate = await userModel.findOne({email:email})
        if(isDuplicate){
         return res
                 .status(409)                  
                 .send({status:false, message:"email or phone already in use"})
        }
-       user.phone = phone
+       
        user.email = email
 
        if(password){
