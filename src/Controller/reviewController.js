@@ -3,7 +3,6 @@ const {isValidRequest, isValidName, isValid} = require('../Validator/userValidat
 const {isValidId} = require('../Validator/bookValidation')
 const bookModel = require('../Models/bookModel')
 const {isValidRating} = require('../Validator/reviewValidation')
-const moment = require('moment')
 
 
 const createReview = async function(req, res){
@@ -14,7 +13,7 @@ const createReview = async function(req, res){
                 .send({status:false, message:"Enter a valid Input"})
         }
 
-        let {bookId, reviewedBy, reviewedAt, rating, review} = req.body
+        let { reviewedBy, rating, review} = req.body
         let data = {}
         let Id = req.params.bookId
 
@@ -30,11 +29,6 @@ const createReview = async function(req, res){
             .status(404)
             .send({status:false, message:"No book found or is already deleted"})
         }
-
-        if(bookId == undefined){
-            data.bookId = Id;
-        }
-
        
         if(reviewedBy){
             if(!isValidName(reviewedBy)){
@@ -44,11 +38,7 @@ const createReview = async function(req, res){
             }else data.reviewedBy = reviewedBy
         }
 
-        if(reviewedAt == undefined){
-            data.reviewedAt = Date.now()
-        }
-
-        if(rating && typeof rating != String){ // "4"
+        if(rating && typeof rating !== "string"){
             if(!isValidRating(rating)){
                 return res
                     .status(400)
@@ -67,6 +57,9 @@ const createReview = async function(req, res){
                     .send({status:false, message:"Enter a valid Review"})
             }else data.review = review.trim()
         }
+
+        data.reviewedAt = Date.now()
+        data.bookId = Id
 
         const bookReview = await reviewModel.create(data)
         const finalBook = await bookModel.findOneAndUpdate({_id:Id},{$inc:{reviews: 1}},{new:true}).select({__v:0})
@@ -114,7 +107,7 @@ const updateReview = async function(req, res){
         }
 
         if(rating != undefined){
-            if(rating == String || !isValidRating(rating)){
+            if(typeof rating === "string" || !isValidRating(rating)){
                 return res
                     .status(400)
                     .send({status:false, message:"Enter valid rating"})

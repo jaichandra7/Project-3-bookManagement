@@ -49,7 +49,7 @@ const createUser = async function(req,res){
             .send({status:false, message:"Name is required"})
         }
 
-        if(phone && typeof phone == String){
+        if(phone && typeof phone === "string"){
             phone = phone.trim()
             
             if(!isValidPhone(phone)){

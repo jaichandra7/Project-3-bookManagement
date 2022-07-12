@@ -14,11 +14,13 @@ const router = express.Router()
 router.post('/register', createUser)
 router.post('/login', login)
 
+
 router.post('/books',authentication, createBook)
 router.get('/books', authentication, getBooks )
 router.get('/books/:bookId', authentication, getBooksParticular)
 router.put('/books/:bookId', authentication, authorization, updatebook)
 router.delete('/books/:bookId', authentication, authorization, deleteBook)
+
 
 router.post('/books/:bookId/review', createReview)
 router.put('/books/:bookId/review/:reviewId', updateReview)

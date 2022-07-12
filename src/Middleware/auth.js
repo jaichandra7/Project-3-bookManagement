@@ -51,7 +51,7 @@ const authorization = async function (req, res, next) {
     }
     // token validation
     if (userLoggedIn != book.userId)
-      return res.status(401).send({
+      return res.status(403).send({
         status: false,
         message: "You are not authorized to perform this task",
       });

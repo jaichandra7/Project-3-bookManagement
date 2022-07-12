@@ -63,7 +63,7 @@ const createBook = async function(req, res){
          }
          book.userId = userId  
 
-        if(ISBN ){
+        if(ISBN && typeof ISBN === "string"){ 
             ISBN = ISBN.trim()
                 if(!isValidISBN(ISBN) ){
                     return res
@@ -194,7 +194,7 @@ const getBooksParticular = async function(req, res){
                 .send({status:false, message:"Enter valid format of bookId"})
         }
 
-        const book = await bookModel.findOne({_id: bookId}).select({__v:0})
+        const book = await bookModel.findOne({_id: bookId,isDeleted:false}).select({__v:0})
         if(!book){
             return  res
                 .status(404)
@@ -301,7 +301,7 @@ const deleteBook = async function(req, res){
 
         return res
         .status(200)
-        .send({status:true, message: "Success"})
+        .send({status:true, message: "Book Deleted Successfully"})
     }
     catch(error){
         return res
