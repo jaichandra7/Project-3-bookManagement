@@ -63,18 +63,18 @@ const createUser = async function(req,res){
                 for(i=0; i<userPhone.length; i++){
                     if(userPhone[i].phone.startsWith("+91")){
                         if(userPhone[i].phone.startsWith(phone, 4)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(0)){
                         if(userPhone[i].phone.startsWith(phone, 1)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(phone, 0)== true){
-                        return res.status(400).send({message:"phone number is already in use"})
+                        return res.status(409).send({status:false, message:"phone number is already in use"})
                     }
                 }
                 user.phone = phone
@@ -85,18 +85,18 @@ const createUser = async function(req,res){
                 for(i=0; i<userPhone.length; i++){
                     if(userPhone[i].phone.startsWith("+91")){
                         if(userPhone[i].phone.startsWith(phone, 4)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(0)){
                         if(userPhone[i].phone.startsWith(phone, 1)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(phone, 0)== true){
-                        return res.status(400).send({message:"phone number is already in use"})
+                        return res.status(409).send({status:false, message:"phone number is already in use"})
                     }
                 }
                 user.phone = phone
@@ -106,18 +106,18 @@ const createUser = async function(req,res){
                 for(i=0; i<userPhone.length; i++){
                     if(userPhone[i].phone.startsWith("+91")){
                         if(userPhone[i].phone.startsWith(phone, 4)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(0)){
                         if(userPhone[i].phone.startsWith(phone, 1)== true){
-                            return res.status(400).send({message:"phone number is already in use"})
+                            return res.status(409).send({status:false, message:"phone number is already in use"})
                         }
                     }
         
                     if(userPhone[i].phone.startsWith(phone, 0)== true){
-                        return res.status(400).send({message:"phone number is already in use"})
+                        return res.status(409).send({status:false, message:"phone number is already in use"})
                     }
                 }
                 user.phone = phone
