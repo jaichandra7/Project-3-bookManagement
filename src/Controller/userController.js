@@ -120,7 +120,7 @@ const createUser = async function(req,res){
                         return res.status(409).send({status:false, message:"phone number is already in use"})
                     }
                 }
-                user.phone = phone
+                user.phone = phone // object . key = value
             }
             
         }else{
@@ -241,7 +241,7 @@ const login = async function (req, res) {
       let token = jwt.sign(
         {
           userId: user._id.toString(),
-          expiresIn: "24h"
+          expiresIn: "24h"  
         },
         "book-management36"
       );
