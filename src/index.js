@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // mongoDb connection
 mongoose
   .connect(
-    "mongodb+srv://jaichandra:9908078754b@cluster0.pwobr.mongodb.net/project-3",
+    "mongodb+srv://jaichandra:9908078754b@cluster0.pwobr.mongodb.net/project-3BM",
     {
       useNewUrlParser: true,
     }
